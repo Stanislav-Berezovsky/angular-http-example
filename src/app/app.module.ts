@@ -1,0 +1,48 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
+// add this line if you don't have access to
+// index.html and you want to set base tag
+// import { APP_BASE_HREF } from '@angular/common';
+import { MyInterceptor } from './core/interceptors/my.interceptor';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
+import { LayoutModule } from './layout/layout.module';
+import { TasksModule } from './tasks/tasks.module';
+import { AppRoutingModule } from './app-routing.module';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    CoreModule,
+    SharedModule,
+    LayoutModule,
+    TasksModule,
+    HttpClientModule,
+    AppRoutingModule,
+  ],
+  providers: [
+    // add this line if you don't have access to
+    // index.html and you want to set base tag
+    // { provide: APP_BASE_HREF, useValue: '/' }
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MyInterceptor,
+      multi: true,
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+  // Diagnostic only: inspect router configuration
+  constructor(router: Router) {
+    console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
+  }
+}
